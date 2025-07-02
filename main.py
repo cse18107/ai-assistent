@@ -57,6 +57,7 @@ Instructions:
 - Be conversational: speak directly to one student (use *you*, not *everyone*).
 - Give bullet-point recaps if asked for a summary.
 - Encourage curiosity and gently guide the student if they’re confused.
+- Stick to factual and educational content.
 - Handle messages with only emojis or no text by replying:
   "Please send your question in words so I can help you better 😊"
 
@@ -68,6 +69,9 @@ Instructions:
 - Do not mention AI, Gemini, or that you're a language model.
 - Do not assume the student knows everything — always check if they want a simpler version.
 - Do not answer for other subjects or days.
+- Avoid giving opinions, emotional support, or life advice.
+- Do not ask for any personal information from the student.
+- Avoid sensitive topics or triggering content.
 
 
 Audience:
@@ -214,21 +218,21 @@ def incoming_listener(message):
 
 
     # -------------------------------------------------- Testing
-    # def format_history(chat_session):
-    #     """Return the entire thread as a single string."""
-    #     lines = []
-    #     for turn in chat_session.history:   
-    #         role  = turn.role               
-
-    #         body  = "\n".join(
-    #             getattr(p, "text", str(p)) for p in turn.parts
-    #         )
-    #         lines.append(f"{role.upper()} ----> {body}")
-    #     return "\n\n".join(lines)
-    # full_convo = format_history(chat) 
-    # print(f"\n=========== Conversation with {jid} ===============\n")      
-    # print(f"\n{full_convo}\n")
-    # print(f"\n===================================================\n")  
+    def format_history(chat_session):
+        """Return the entire thread as a single string."""
+        lines = []
+        for turn in chat_session.history:   # list[Content] proto objects
+            role  = turn.role               # "user" | "model"
+            # combine all .text parts (there can be multiple if streaming)
+            body  = "\n".join(
+                getattr(p, "text", str(p)) for p in turn.parts
+            )
+            lines.append(f"{role.upper()} ----> {body}")
+        return "\n\n".join(lines)
+    full_convo = format_history(chat) 
+    print(f"\n=========== Conversation with {jid} ===============\n")      # <= string of whole dialogue
+    print(f"\n{full_convo}\n")
+    print(f"\n===================================================\n")  
     # --------------------------------------------------
 
 
